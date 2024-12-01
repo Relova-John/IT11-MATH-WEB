@@ -60,8 +60,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $score++;
         }
     }
+    $leaderboard = "leaderboard.txt";
+    $username = isset($_POST['username']) ? $_POST['username'] : 'Anonymous';
+    $entry = "$username: $score\n";
+    file_put_contents($leaderboard, $entry, FILE_APPEND);
+    
     echo "<h2>Your Score: $score/" . count($questions) . "</h2>";
     echo '<a href="index.php">Try Again</a>';
+    echo '<br><a href="leaderboard.php">View Leaderboard</a>';
     exit;
 }
 ?>
