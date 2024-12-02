@@ -1,4 +1,10 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['quiz_start_time'])) {
+    $_SESSION['quiz_start_time'] = date('Y-m-d H:i:s');
+}
+
 $questions = [
     [
         "question" => "What does PHP stand for?",
@@ -60,10 +66,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $score++;
         }
     }
-    $leaderboard = "leaderboard.txt";
+
     $username = isset($_POST['username']) ? $_POST['username'] : 'Anonymous';
-    $entry = "$username: $score\n";
-    file_put_contents($leaderboard, $entry, FILE_APPEND);
+
+    if (!isset($_SESSION['leaderboard'])) {
+        $_SESSION['leaderboard'] = [];
+    }
+
+    $finish_time = date('Y-m-d H:i:s');
+    $_SESSION['leaderboard'][] = [
+        "username" => $username,
+        "score" => $score,
+        "start_time" => $_SESSION['quiz_start_time'],
+        "finish_time" => $finish_time
+    ];
+
     header("Location: result.php?score=$score&total=" . count($questions));
     exit;
 }
