@@ -74,29 +74,100 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>PHP Quiz</title>
-  </head>
-  <body>
-      <h1>PHP Quiz</h1>
-      <form method="post" action="">
-          <label for="username">Enter Your Name: </label>
-          <input type="text" name="username" id="username" required><br><br>
-  
-          <?php foreach ($questions as $index => $question): ?>
-              <fieldset>
-                  <legend><?php echo $question['question']; ?></legend>
-                  <?php foreach ($question['options'] as $optionIndex => $option): ?>
-                      <label>
-                          <input type="radio" name="question<?php echo $index; ?>" value="<?php echo $optionIndex; ?>">
-                          <?php echo $option; ?>
-                      </label><br>
-                  <?php endforeach; ?>
-              </fieldset>
-          <?php endforeach; ?>
-          <input type="submit" value="Submit">
-      </form>
-  </body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PHP Quiz</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f2e9e1;
+                color: #4a2c2a;
+                margin: 0;
+                padding: 20px;
+            }
+            h1 {
+                text-align: center;
+                color: #2c1a18;
+                font-size: 2.5em;
+                margin-bottom: 20px;
+            }
+            .container {
+                background-color: #fff;
+                border-radius: 10px;
+                padding: 30px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            fieldset {
+                border: 2px solid #2c1a18;
+                padding: 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+            legend {
+                font-weight: bold;
+                color: #2c1a18;
+            }
+            label {
+                display: block;
+                margin: 10px 0;
+            }
+            input[type="radio"] {
+                margin-right: 10px;
+            }
+            input[type="text"] {
+                padding: 10px;
+                width: calc(100% - 22px);
+                margin-bottom: 20px;
+                border: 1px solid #2c1a18;
+                border-radius: 5px;
+            }
+            input[type="submit"] {
+                background-color: #2c1a18;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            input[type="submit"]:hover {
+                background-color: #4a2c2a;
+            }
+            a {
+                color: #2c1a18;
+                text-decoration: none;
+                font-size: 1.2em;
+                display: block;
+                text-align: center;
+                margin-top: 20px;
+            }
+            a:hover {
+                color: #4a2c2a;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>PHP Quiz</h1>
+            <form method="post" action="">
+                <label for="username">Enter Your Name: </label>
+                <input type="text" name="username" id="username" required><br><br>
+    
+                <?php foreach ($questions as $index => $question): ?>
+                    <fieldset>
+                        <legend><?php echo $question['question']; ?></legend>
+                        <?php foreach ($question['options'] as $optionIndex => $option): ?>
+                            <label>
+                                <input type="radio" name="question<?php echo $index; ?>" value="<?php echo $optionIndex; ?>">
+                                <?php echo $option; ?>
+                            </label><br>
+                        <?php endforeach; ?>
+                    </fieldset>
+                <?php endforeach; ?>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </body>
 </html>
