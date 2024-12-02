@@ -64,10 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = isset($_POST['username']) ? $_POST['username'] : 'Anonymous';
     $entry = "$username: $score\n";
     file_put_contents($leaderboard, $entry, FILE_APPEND);
-    
-    echo "<h2>Your Score: $score/" . count($questions) . "</h2>";
-    echo '<a href="index.php">Try Again</a>';
-    echo '<br><a href="leaderboard.php">View Leaderboard</a>';
+    header("Location: result.php?score=$score&total=" . count($questions));
     exit;
 }
 ?>
@@ -135,17 +132,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             input[type="submit"]:hover {
                 background-color: #4a2c2a;
             }
-            a {
-                color: #2c1a18;
-                text-decoration: none;
-                font-size: 1.2em;
-                display: block;
-                text-align: center;
-                margin-top: 20px;
-            }
-            a:hover {
-                color: #4a2c2a;
-            }
         </style>
     </head>
     <body>
@@ -154,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form method="post" action="">
                 <label for="username">Enter Your Name: </label>
                 <input type="text" name="username" id="username" required><br><br>
-    
+
                 <?php foreach ($questions as $index => $question): ?>
                     <fieldset>
                         <legend><?php echo $question['question']; ?></legend>
