@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $score = isset($_GET['score']) ? $_GET['score'] : 0;
 $total = isset($_GET['total']) ? $_GET['total'] : 0;
 ?>
@@ -54,6 +56,23 @@ $total = isset($_GET['total']) ? $_GET['total'] : 0;
             .links .btn:hover {
                 background-color: #4a2c2a;
             }
+            .leaderboard {
+                margin-top: 30px;
+                text-align: center;
+            }
+            .leaderboard table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .leaderboard th, .leaderboard td {
+                border: 1px solid #2c1a18;
+                padding: 10px;
+                text-align: center;
+            }
+            .leaderboard th {
+                background-color: #2c1a18;
+                color: #fff;
+            }
         </style>
     </head>
     <body>
@@ -64,8 +83,28 @@ $total = isset($_GET['total']) ? $_GET['total'] : 0;
             </div>
             <div class="links">
                 <a href="index.php" class="btn">Try Again</a><br>
-                <a href="leaderboard.php" class="btn">View Leaderboard</a>
             </div>
+            <?php if (isset($_SESSION['leaderboard']) && count($_SESSION['leaderboard']) > 0): ?>
+                <div class="leaderboard">
+                    <h2>Leaderboard</h2>
+                    <table>
+                        <tr>
+                            <th>Username</th>
+                            <th>Score</th>
+                            <th>Start Time</th>
+                            <th>Finish Time</th>
+                        </tr>
+                        <?php foreach ($_SESSION['leaderboard'] as $entry): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($entry['username']); ?></td>
+                                <td><?php echo $entry['score']; ?></td>
+                                <td><?php echo $entry['start_time']; ?></td>
+                                <td><?php echo $entry['finish_time']; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                </div>
+            <?php endif; ?>
         </div>
     </body>
 </html>
