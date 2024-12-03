@@ -1,6 +1,8 @@
 <?php
 session_start();
-
+if (isset($_SESSION['quiz_start_time'])) {
+    unset($_SESSION['quiz_start_time']);
+}
 $score = isset($_GET['score']) ? $_GET['score'] : 0;
 $total = isset($_GET['total']) ? $_GET['total'] : 0;
 ?>
