@@ -108,13 +108,14 @@ if (isset($_SESSION['leaderboard']) && count($_SESSION['leaderboard']) > 0) {
                 margin-bottom: 20px;
             }
             .filter-buttons button {
-                background-color: #2c1a18;
-                color: #fff;
-                padding: 10px 20px;
+                margin-top: 10px;
+                background-color: #d3b683;
+                color: #000;
+                padding: 5px 10px;
                 border: none;
-                border-radius: 5px;
+                border-radius: 2px;
                 cursor: pointer;
-                font-size: 1.2em;
+                font-size: 0.6em;
             }
             .filter-buttons button:hover {
                 background-color: #4a2c2a;
