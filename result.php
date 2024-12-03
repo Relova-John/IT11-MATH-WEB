@@ -5,6 +5,34 @@ if (isset($_SESSION['quiz_start_time'])) {
 }
 $score = isset($_GET['score']) ? $_GET['score'] : 0;
 $total = isset($_GET['total']) ? $_GET['total'] : 0;
+
+function sortLeaderboard($leaderboard, $criterion) {
+    usort($leaderboard, function ($a, $b) use ($criterion) {
+        if ($criterion == 'score') {
+            return $b['score'] - $a['score'];
+        } elseif ($criterion == 'start_time') {
+            return strtotime($a['start_time']) - strtotime($b['start_time']);
+        } elseif ($criterion == 'finish_time') {
+            return strtotime($a['finish_time']) - strtotime($b['finish_time']);
+        } elseif ($criterion == 'time_taken') {
+            $time_a = strtotime($a['finish_time']) - strtotime($a['start_time']);
+            $time_b = strtotime($b['finish_time']) - strtotime($b['start_time']);
+            return $time_a - $time_b;
+        }
+        return 0;
+    });
+    return $leaderboard;
+}
+
+if (isset($_POST['filter'])) {
+    $filter = $_POST['filter'];
+} else {
+    $filter = 'score';
+}
+
+if (isset($_SESSION['leaderboard']) && count($_SESSION['leaderboard']) > 0) {
+    $_SESSION['leaderboard'] = sortLeaderboard($_SESSION['leaderboard'], $filter);
+}
 ?>
 
 <!DOCTYPE html>
@@ -75,6 +103,22 @@ $total = isset($_GET['total']) ? $_GET['total'] : 0;
                 background-color: #2c1a18;
                 color: #fff;
             }
+            .filter-buttons {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .filter-buttons button {
+                background-color: #2c1a18;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1.2em;
+            }
+            .filter-buttons button:hover {
+                background-color: #4a2c2a;
+            }
         </style>
     </head>
     <body>
@@ -87,6 +131,14 @@ $total = isset($_GET['total']) ? $_GET['total'] : 0;
                 <a href="index.php" class="btn">Try Again</a><br>
             </div>
             <?php if (isset($_SESSION['leaderboard']) && count($_SESSION['leaderboard']) > 0): ?>
+                <div class="filter-buttons">
+                    <form method="POST">
+                        <button type="submit" name="filter" value="score">Sort by Score</button>
+                        <button type="submit" name="filter" value="start_time">Sort by Start Time</button>
+                        <button type="submit" name="filter" value="finish_time">Sort by Finish Time</button>
+                        <button type="submit" name="filter" value="time_taken">Sort by Time Taken</button>
+                    </form>
+                </div>
                 <div class="leaderboard">
                     <h2>Leaderboard</h2>
                     <table>
@@ -95,13 +147,36 @@ $total = isset($_GET['total']) ? $_GET['total'] : 0;
                             <th>Score</th>
                             <th>Start Time</th>
                             <th>Finish Time</th>
+                            <th>Time Taken</th>
                         </tr>
                         <?php foreach ($_SESSION['leaderboard'] as $entry): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($entry['username']); ?></td>
                                 <td><?php echo $entry['score']; ?></td>
-                                <td><?php echo $entry['start_time']; ?></td>
-                                <td><?php echo $entry['finish_time']; ?></td>
+                                <td>
+                                    <?php 
+                                    $start_time = new DateTime($entry['start_time'], new DateTimeZone('UTC'));
+                                    $start_time->setTimezone(new DateTimeZone('Asia/Manila'));
+                                    echo $start_time->format('Y-m-d H:i:s'); 
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php 
+                                    $finish_time = new DateTime($entry['finish_time'], new DateTimeZone('UTC'));
+                                    $finish_time->setTimezone(new DateTimeZone('Asia/Manila'));
+                                    echo $finish_time->format('Y-m-d H:i:s'); 
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php 
+                                    $start = new DateTime($entry['start_time'], new DateTimeZone('UTC'));
+                                    $finish = new DateTime($entry['finish_time'], new DateTimeZone('UTC'));
+                                    $start->setTimezone(new DateTimeZone('Asia/Manila'));
+                                    $finish->setTimezone(new DateTimeZone('Asia/Manila'));
+                                    $interval = $start->diff($finish);
+                                    echo $interval->format('%H:%I:%S');
+                                    ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </table>
